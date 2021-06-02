@@ -1,9 +1,13 @@
 import java.util.*    // Random requires import
 
+// ====================================
+// 了解有关函数的更多信息
+// ====================================
+
 fun randomDay(): String {
     val week = arrayOf(
-        "Monday", "Tuesday", "Wednesday", "Thursday",
-        "Friday", "Saturday", "Sunday"
+            "Monday", "Tuesday", "Wednesday", "Thursday",
+            "Friday", "Saturday", "Sunday"
     )
     return week[Random().nextInt(week.size)]
 }
@@ -28,6 +32,10 @@ fun feedTheFish() {
     println("Change water: ${shouldChangeWater(day, dirty = 31)}")
 }
 
+// ====================================
+// 探索默认值和紧凑函数
+// ====================================
+
 fun swim(speed: String = "fast") {
     println("swimming $speed")
 }
@@ -47,10 +55,52 @@ fun isDirty(dirty: Int) = dirty > 30
 
 fun isSunday(day: String) = day == "Sunday"
 
+// ====================================
+// 开始使用过滤器
+// ====================================
+
+val decorations = listOf("rock", "pagoda", "plastic plant", "alligator", "flowerpot")
+
+fun startFilter() {
+    // eager, creates a new list
+    val eager = decorations.filter { it[0] == 'p' }
+    println("eager: $eager")
+
+    // lazy, will wait until asked to evaluate
+    val filtered = decorations.asSequence().filter { it[0] == 'p' }
+    println("filtered: $filtered")
+
+    // force evaluation of the lazy list
+    val newList = filtered.toList()
+    println("new list: $newList")
+
+    val lazyMap = decorations.asSequence().map {
+        println("access: $it")
+        it
+    }
+    println("lazy: $lazyMap")
+    println("-----")
+    println("first: ${lazyMap.first()}")
+    println("-----")
+    println("all: ${lazyMap.toList()}")
+    val lazyMap2 = decorations.asSequence().filter { it[0] == 'p' }.map {
+        println("access: $it")
+        it
+    }
+    println("-----")
+    println("filtered: ${lazyMap2.toList()}")
+}
+
+/**
+ * 程序入口函数
+ */
 fun main(args: Array<String>) {
     feedTheFish()
 
     swim()   // uses default speed
     swim("slow")   // positional argument
     swim(speed = "turtle-like")   // named parameter
+
+    // Get started with filters
+    startFilter()
 }
