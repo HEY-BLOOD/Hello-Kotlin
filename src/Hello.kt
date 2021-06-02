@@ -91,16 +91,41 @@ fun startFilter() {
     println("filtered: ${lazyMap2.toList()}")
 }
 
+
+// ====================================
+// 开始使用 lambda 和高阶函数
+// ====================================
+
+fun updateDirty(dirty: Int, operation: (Int) -> Int): Int {
+    return operation(dirty)
+}
+
+fun lambdaAndHighOrderFunctions() {
+    val waterFilter: (Int) -> Int = { dirty -> dirty / 2 }
+    println(updateDirty(30, waterFilter))
+
+    fun increaseDirty(start: Int) = start + 1
+    println(updateDirty(15, ::increaseDirty))
+
+    var dirtyLevel = 19;
+    dirtyLevel = updateDirty(dirtyLevel) { dirtyLevel -> dirtyLevel + 23 }
+    println(dirtyLevel)
+}
+
+
 /**
  * 程序入口函数
  */
 fun main(args: Array<String>) {
+    // 了解有关函数的更多信息
     feedTheFish()
-
     swim()   // uses default speed
     swim("slow")   // positional argument
     swim(speed = "turtle-like")   // named parameter
 
-    // Get started with filters
+    // 开始使用过滤器
     startFilter()
+
+    // 开始使用 lambda 和高阶函数
+    lambdaAndHighOrderFunctions()
 }
