@@ -42,7 +42,29 @@ fun testAnnotations() {
 
 }
 
+fun breaks() {
+    outerLoop@ for (i in 1..100) {
+        for (j in 1..100) {
+            if (i > 10) break@outerLoop  // breaks to outer loop
+        }
+        print("$i ")
+    }
+    println()
+}
+
+fun continues() {
+    outerLoop@ for (i in 1..100) {
+        if (i % 2 == 0) continue  // continues to next loop
+        if (i > 10) break  // breaks out form nearest loop
+        print("$i ")
+    }
+    println()
+}
+
 
 fun main() {
     testAnnotations()
+
+    breaks()
+    continues()
 }
