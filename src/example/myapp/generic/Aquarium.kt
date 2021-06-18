@@ -72,6 +72,23 @@ class AquariumIn<out T : WaterSupply>(val waterSupply: T) {
     }
 }
 
+
+// 创建泛型函数
+class AquariumReified<T>(val waterSupply: T) {
+    inline fun <reified R : WaterSupply> hasWaterSupplyOfType() = waterSupply is R
+}
+
+fun <T : WaterSupply> isWaterClean(aquarium: Aquarium<T>) {
+    println("aquarium water is clean: ${!aquarium.waterSupply.needsProcessing}")
+}
+
+
+// 创建泛型扩展函数
+inline fun <reified T : WaterSupply> WaterSupply.isOfType() = this is T
+
+inline fun <reified R : WaterSupply> Aquarium<*>.hasWaterSupplyOfType() = waterSupply is R
+
+// 泛型示例
 fun genericsExample() {
     val aquarium = Aquarium<TapWater>(TapWater())
     println("water needs processing: ${aquarium.waterSupply.needsProcessing}")
@@ -96,6 +113,21 @@ fun genericsExample() {
     val cleaner = TapWaterCleaner()
     val aquariumIn = AquariumIn(TapWater())
     aquariumIn.addWater(cleaner)
+
+    val aquarium5 = Aquarium(TapWater())
+    isWaterClean(aquarium5)
+
+    val aquariumReified = AquariumReified(TapWater())
+    println(aquariumReified.hasWaterSupplyOfType<TapWater>())   // true
+    println(aquariumReified.hasWaterSupplyOfType<LakeWater>())   // false
+
+    val aquarium6 = Aquarium(TapWater())
+    println(aquarium6.waterSupply.isOfType<TapWater>())   // true
+    println(aquarium6.waterSupply.isOfType<LakeWater>())   // false
+
+    val aquarium7 = Aquarium(TapWater())
+    println(aquarium7.hasWaterSupplyOfType<TapWater>())   // true
+    println(aquarium7.hasWaterSupplyOfType<LakeWater>())   // false
 }
 
 fun main() {
