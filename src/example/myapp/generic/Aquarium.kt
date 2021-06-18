@@ -33,10 +33,42 @@ class Aquarium2<T : Any>(val waterSupply: T)
 /**
  * waterSupply can only be WaterSupply
  */
-class Aquarium3<T : WaterSupply>(val waterSupply: T) {
+class Aquarium3<out T : WaterSupply>(val waterSupply: T) {
     fun addWater() {
         check(!waterSupply.needsProcessing) { "water supply needs processing first" }
         println("adding water from $waterSupply")
+    }
+}
+
+
+// 定义输出类型
+fun addItemTo(aquarium: AquariumOut<WaterSupply>) = println("item added")
+
+/**
+ * waterSupply can only be WaterSupply
+ */
+class AquariumOut<out T : WaterSupply>(val waterSupply: T) {
+    fun addWater() {
+        check(!waterSupply.needsProcessing) { "water supply needs processing first" }
+        println("adding water from $waterSupply")
+    }
+}
+
+// 定义输入类型
+interface Cleaner<in T : WaterSupply> {
+    fun clean(waterSupply: T)
+}
+
+class TapWaterCleaner : Cleaner<TapWater> {
+    override fun clean(waterSupply: TapWater) = waterSupply.addChemicalCleaners()
+}
+
+class AquariumIn<out T : WaterSupply>(val waterSupply: T) {
+    fun addWater(cleaner: Cleaner<T>) {
+        if (waterSupply.needsProcessing) {
+            cleaner.clean(waterSupply)
+        }
+        println("water added")
     }
 }
 
@@ -57,6 +89,13 @@ fun genericsExample() {
     val aquarium4 = Aquarium3(LakeWater())
     aquarium4.waterSupply.filter()
     aquarium4.addWater()
+
+    val aquariumOut = AquariumOut(TapWater())
+    addItemTo(aquariumOut)
+
+    val cleaner = TapWaterCleaner()
+    val aquariumIn = AquariumIn(TapWater())
+    aquariumIn.addWater(cleaner)
 }
 
 fun main() {
